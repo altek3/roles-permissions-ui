@@ -1,47 +1,81 @@
-# Team Access Manager
+# AI Support Agent (with tool use + CI)
 
-A single-page web app for managing team members, roles, and permissions —
-built using **Cursor**, an AI-assisted code editor, to prototype the UI
-quickly from a written spec rather than hand-coding every element.
+A Claude-powered support agent that doesn't just *answer* customer
+questions — it **investigates** them, using tools to look up account
+details and ticket history, and can escalate to a human when needed.
 
-## Why I built this
+This is the "agentic" pattern behind real AI support tools: the model
+decides which tools to call, in what order, based on the conversation —
+it isn't a hardcoded if/else flowchart.
 
-The job I'm applying for specifically calls out comfort with AI-assisted
-development tools like Cursor, Replit, and Copilot. This project is a
-direct demonstration of that: I wrote a detailed feature spec, had
-Cursor's AI agent generate the implementation, then reviewed, tested, and
-verified the result myself before shipping it — the same workflow this
-role would actually use day to day.
+## Why this is a step up from a single API call
 
-## What it does
+- **Multi-step reasoning**: the agent can call multiple tools in sequence
+  (e.g. check the account, then check tickets, then decide whether to
+  escalate) before giving a final answer
+- **Real tool-use / function-calling**: uses Claude's tool-use API, the
+  same pattern used to build agents that take real actions, not just
+  generate text
+- **Automated tests**: the tool layer has a real test suite (no API calls
+  needed — fast, free, deterministic)
+- **CI/CD**: a GitHub Actions workflow (`.github/workflows/tests.yml`)
+  runs the test suite automatically on every push, so broken code can't
+  silently sit in `main`
 
-- Add a team member (name, email, role)
-- Three roles — Admin, Editor, Viewer — each mapped to a fixed set of
-  permissions
-- Changing a person's role updates their shown permissions instantly
-- Remove a team member
-- Data persists in the browser (localStorage) between visits
+## How it works
 
-## How it was built
+1. A customer message + email comes in
+2. Claude decides whether it needs more info (account status? ticket
+   history?) and calls the relevant tool
+3. The tool result is fed back to Claude, which can call more tools or
+   give a final answer
+4. If the situation warrants it (repeated failures, billing issues,
+   frustration), Claude calls `escalate_to_human`
 
-1. Wrote a specific prompt describing the exact features, role/permission
-   mapping, and styling constraints
-2. Cursor's AI agent generated `index.html` (HTML, CSS, and JS in one
-   file, no framework or build step)
-3. I reviewed the generated code to confirm the permission logic and
-   remove functionality matched the spec
-4. Manually tested every feature (add, role change, remove, refresh
-   persistence) before pushing to GitHub
+### Example
 
-## Tech
+```bash
+python agent.py "mike@resort.com" "My card keeps failing and I've reported this before, this is really frustrating"
+```
 
-Plain HTML/CSS/JavaScript, generated with Cursor and reviewed/tested by
-hand. Runs by just opening `index.html` in a browser — no install needed.
+Because `mike@resort.com` has two open billing tickets in the mock data,
+the agent should look up his account, see the repeated open tickets, and
+escalate to a human rather than trying to solve it again itself.
 
-## A note on process
+## Setup
 
-I used an AI coding assistant to generate this UI, which is exactly the
-kind of AI-assisted development this role is looking for. I reviewed and
-manually tested every feature listed above before considering it done —
-the goal was fast, correct prototyping, not blindly shipping
-AI-generated code without checking it.
+```bash
+git clone <this-repo>
+cd support-agent-tools
+pip install -r requirements.txt
+export ANTHROPIC_API_KEY=your_key_here
+python agent.py "jane@hotel.com" "Did my CSV export issue ever get fixed?"
+```
+
+## Running the tests
+
+```bash
+pytest test_tools.py -v
+```
+
+These test the tool layer directly (account lookup, ticket lookup,
+escalation logging) — no API key or network calls needed, so they run in
+under a second and are what CI runs on every push.
+
+## Project structure
+
+```
+agent.py       — the agent loop (calls Claude, executes tools, loops)
+tools.py       — tool implementations + tool schemas
+mock_data.py   — fake accounts/tickets (stand-in for a real database)
+test_tools.py  — automated tests for the tool layer
+.github/workflows/tests.yml — CI: runs tests on every push
+```
+
+## Possible next steps
+
+- Swap `mock_data.py` for real database queries
+- Add a tool for creating/updating tickets, not just reading them
+- Add conversation memory across multiple messages from the same customer
+- Wrap this in the Flask webhook service from the other project so it's
+  reachable over HTTP
