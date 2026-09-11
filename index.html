@@ -37,10 +37,169 @@
         var(--paper);
     }
 
+    .menu-btn {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 40;
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding: 0;
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    body.nav-open .menu-btn span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    body.nav-open .menu-btn span:nth-child(2) { opacity: 0; }
+
+    body.nav-open .menu-btn span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(19, 33, 28, 0.38);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 20;
+    }
+
+    body.nav-open .backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(280px, 86vw);
+      background: #10211c;
+      color: #f4efe4;
+      z-index: 30;
+      transform: translateX(-105%);
+      transition: transform 0.28s ease;
+      padding: 88px 18px 24px;
+      box-shadow: 12px 0 40px rgba(0, 0, 0, 0.18);
+    }
+
+    body.nav-open .sidebar { transform: translateX(0); }
+
+    .sidebar p {
+      margin: 0 0 16px 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      color: #9ecab8;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: block;
+      text-align: left;
+      background: transparent;
+      color: #efe8d8;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .nav-item:hover { background: rgba(255, 255, 255, 0.06); }
+
+    .nav-item.is-active {
+      background: #1f6f5b;
+      color: #f7fff9;
+      font-weight: 600;
+    }
+
+    .view { display: none; }
+    .view.is-active { display: block; }
+
+    .placeholder.card { padding: 28px; }
+
+    .placeholder h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.5rem;
+      margin: 0 0 10px;
+    }
+
+    .placeholder p { margin: 0; color: var(--muted); }
+
+    .activity-card { padding: 22px 22px 10px; }
+
+    .activity-card h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      margin: 0 0 6px;
+    }
+
+    .activity-card .count {
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .activity-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .activity-list li {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 16px;
+      padding: 14px 4px;
+      border-top: 1px solid var(--paper-2);
+    }
+
+    .activity-list time {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .activity-list p {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .activity-list li {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
     .wrap {
       max-width: 1080px;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 72px 24px 80px;
     }
 
     header {
@@ -120,6 +279,19 @@
       outline: none;
     }
 
+    input[type="checkbox"] {
+      width: auto;
+      padding: 0;
+      accent-color: var(--teal);
+    }
+
+    input[type="color"] {
+      width: 52px;
+      height: 40px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
     input:focus, select:focus {
       border-color: var(--teal);
       box-shadow: 0 0 0 3px rgba(31, 111, 91, 0.18);
@@ -170,6 +342,10 @@
       justify-content: space-between;
       align-items: baseline;
       padding: 22px 22px 0;
+    }
+
+    .search-field {
+      padding: 12px 16px 0;
     }
 
     .count {
@@ -232,8 +408,147 @@
     }
 
     .chip.view { background: #efe8d8; color: #6a4b16; }
-    .chip.edit { background: #f3e3d2; color: #8a4a12; }
-    .chip.manage { background: #dceee7; color: var(--teal-deep); }
+
+    .role-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-badge {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+
+    .role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .roles-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .roles-side { display: grid; gap: 22px; }
+
+    .roles-list-card,
+    .perm-card { padding: 22px; }
+
+    .roles-list-card h2,
+    .perm-card h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      margin: 0 0 16px;
+    }
+
+    .role-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+
+    .role-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .role-meta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .checks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .perm-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--paper-2);
+    }
+
+    .inline-add {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .inline-add .btn { white-space: nowrap; width: auto; margin: 0; }
+
+    .role-note {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin: 0 0 8px;
+    }
+
+    .browse-card { padding: 22px; }
+
+    .browse-card h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      margin: 0 0 18px;
+    }
+
+    .browse-group {
+      margin-bottom: 22px;
+    }
+
+    .browse-group:last-child { margin-bottom: 0; }
+
+    .browse-people {
+      list-style: none;
+      margin: 10px 0 0;
+      padding: 0;
+    }
+
+    .browse-people li {
+      padding: 9px 6px;
+      border-bottom: 1px solid var(--paper-2);
+    }
+
+    .browse-people li:last-child { border-bottom: 0; }
+
+    .browse-empty {
+      color: var(--muted);
+      margin: 10px 6px 0;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 860px) {
+      .roles-layout { grid-template-columns: 1fr; }
+    }
 
     .empty {
       padding: 48px 24px;
@@ -244,29 +559,28 @@
     @media (max-width: 860px) {
       header { flex-direction: column; align-items: flex-start; }
       .layout { grid-template-columns: 1fr; }
-      table, thead, tbody, th, td, tr { display: block; }
-      thead { display: none; }
-      tbody tr {
-        padding: 14px 16px 6px;
-        border-bottom: 1px solid var(--line);
-      }
-      td {
-        padding: 6px 0;
-        border: 0;
-      }
-      td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--muted);
-        margin-bottom: 4px;
-      }
     }
   </style>
 </head>
 <body>
+  <button class="menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <p>Navigate</p>
+    <nav>
+      <button class="nav-item is-active" type="button" data-view="users">Users</button>
+      <button class="nav-item" type="button" data-view="activity">Activity Log</button>
+      <button class="nav-item" type="button" data-view="roles">Manage Roles</button>
+      <button class="nav-item" type="button" data-view="browse">Browse by Role</button>
+    </nav>
+  </aside>
+
   <div class="wrap">
     <header>
       <div>
@@ -276,63 +590,182 @@
       <p class="lede">Add people, assign roles, and see exactly what they can do — stored on this device.</p>
     </header>
 
-    <div class="layout">
-      <section class="card form-card">
-        <h2>Add a member</h2>
-        <form id="member-form" novalidate>
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required />
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required />
-          </div>
-          <div class="field">
-            <label for="role">Role</label>
-            <select id="role" name="role" required>
-              <option value="Admin">Admin</option>
-              <option value="Editor">Editor</option>
-              <option value="Viewer" selected>Viewer</option>
-            </select>
-          </div>
-          <p class="error" id="form-error" aria-live="polite"></p>
-          <button class="btn btn-primary" type="submit">Add to team</button>
-        </form>
-        <p class="hint">Admin can manage users, edit, and view. Editor can edit and view. Viewer can view only.</p>
-      </section>
+    <section class="view is-active" id="view-users" data-view="users">
+      <div class="layout">
+        <section class="card form-card">
+          <h2>Add a member</h2>
+          <form id="member-form" novalidate>
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="role">Role</label>
+              <select id="role" name="role" required></select>
+            </div>
+            <p class="error" id="form-error" aria-live="polite"></p>
+            <button class="btn btn-primary" type="submit">Add to team</button>
+          </form>
+          <p class="hint">Roles, colors, and permissions are defined in Manage Roles.</p>
+        </section>
 
-      <section class="card table-card">
-        <div class="table-head">
-          <h2>Team members</h2>
-          <span class="count" id="member-count"></span>
+        <section class="card table-card">
+          <div class="table-head">
+            <h2>Team members</h2>
+            <span class="count" id="member-count"></span>
+          </div>
+          <div class="search-field">
+            <label for="user-search">Search</label>
+            <input id="user-search" type="search" placeholder="Filter by name or email" autocomplete="off" />
+          </div>
+          <div id="table-body"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-activity" data-view="activity">
+      <div class="card activity-card">
+        <h2>Activity Log</h2>
+        <span class="count" id="activity-count"></span>
+        <div id="activity-body"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-roles" data-view="roles">
+      <div class="roles-layout">
+        <section class="card roles-list-card">
+          <h2>Existing roles</h2>
+          <p class="error" id="role-list-error" aria-live="polite"></p>
+          <div id="roles-list"></div>
+        </section>
+
+        <div class="roles-side">
+          <section class="card form-card">
+            <h2>Add a role</h2>
+            <form id="role-form" novalidate>
+              <div class="field">
+                <label for="role-name">Name</label>
+                <input id="role-name" name="name" type="text" required />
+              </div>
+              <div class="field">
+                <label for="role-color">Color</label>
+                <input id="role-color" name="color" type="color" value="#1f6f5b" />
+              </div>
+              <p class="role-note">Permissions included</p>
+              <div class="checks" id="role-perm-checks"></div>
+              <p class="error" id="role-form-error" aria-live="polite"></p>
+              <button class="btn btn-primary" type="submit">Add role</button>
+            </form>
+          </section>
+
+          <section class="card perm-card">
+            <h2>Permission types</h2>
+            <p class="role-note">These labels appear as checkbox options on every role.</p>
+            <div id="perm-types"></div>
+            <form id="perm-form" class="inline-add" novalidate>
+              <input id="perm-label" name="label" type="text" placeholder="e.g. Delete records" required />
+              <button class="btn btn-primary" type="submit">Add</button>
+            </form>
+            <p class="error" id="perm-form-error" aria-live="polite"></p>
+          </section>
         </div>
-        <div id="table-body"></div>
-      </section>
-    </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-browse" data-view="browse">
+      <div class="card browse-card">
+        <h2>Browse by Role</h2>
+        <div id="browse-body"></div>
+      </div>
+    </section>
   </div>
 
   <script>
     const STORAGE_KEY = "team-access-manager.members";
+    const ACTIVITY_KEY = "team-access-manager.activity";
+    const ROLES_KEY = "team-access-manager.roles";
+    const PERMS_KEY = "team-access-manager.permissions";
+    const ACTIVITY_LIMIT = 100;
 
-    const ROLE_PERMISSIONS = {
-      Admin: ["manage users", "edit content", "view"],
-      Editor: ["edit content", "view"],
-      Viewer: ["view"]
-    };
+    const DEFAULT_PERMISSIONS = [
+      { id: "perm-manage-users", label: "manage users" },
+      { id: "perm-edit-content", label: "edit content" },
+      { id: "perm-view", label: "view" }
+    ];
 
-    const CHIP_CLASS = {
-      "manage users": "manage",
-      "edit content": "edit",
-      view: "view"
-    };
+    const DEFAULT_ROLES = [
+      { id: "role-admin", name: "Admin", color: "#1f6f5b", permissionIds: ["perm-manage-users", "perm-edit-content", "perm-view"] },
+      { id: "role-editor", name: "Editor", color: "#d9772a", permissionIds: ["perm-edit-content", "perm-view"] },
+      { id: "role-viewer", name: "Viewer", color: "#b0892e", permissionIds: ["perm-view"] }
+    ];
 
     const form = document.getElementById("member-form");
     const formError = document.getElementById("form-error");
     const tableBody = document.getElementById("table-body");
     const memberCount = document.getElementById("member-count");
+    const menuBtn = document.getElementById("menu-btn");
+    const backdrop = document.getElementById("backdrop");
+    const sidebar = document.getElementById("sidebar");
+    const activityBody = document.getElementById("activity-body");
+    const activityCount = document.getElementById("activity-count");
+    const rolesList = document.getElementById("roles-list");
+    const roleListError = document.getElementById("role-list-error");
+    const roleForm = document.getElementById("role-form");
+    const roleFormError = document.getElementById("role-form-error");
+    const rolePermChecks = document.getElementById("role-perm-checks");
+    const permForm = document.getElementById("perm-form");
+    const permFormError = document.getElementById("perm-form-error");
+    const permTypes = document.getElementById("perm-types");
+    const userSearch = document.getElementById("user-search");
+    const browseBody = document.getElementById("browse-body");
 
     let members = loadMembers();
+    let activity = loadActivity();
+    let permissions = loadPermissions();
+    let roles = loadRoles();
+    migrateMemberRoles();
+    let currentView = "users";
+
+    function setNavOpen(open) {
+      document.body.classList.toggle("nav-open", open);
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      backdrop.hidden = !open;
+    }
+
+    function showView(viewId) {
+      currentView = viewId;
+      document.querySelectorAll(".view").forEach((view) => {
+        view.classList.toggle("is-active", view.dataset.view === viewId);
+      });
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.classList.toggle("is-active", item.dataset.view === viewId);
+      });
+      if (viewId === "activity") renderActivity();
+      if (viewId === "roles") renderRolesView();
+      if (viewId === "browse") renderBrowse();
+    }
+
+    menuBtn.addEventListener("click", () => {
+      setNavOpen(!document.body.classList.contains("nav-open"));
+    });
+
+    backdrop.addEventListener("click", () => setNavOpen(false));
+
+    sidebar.addEventListener("click", (event) => {
+      const item = event.target.closest(".nav-item");
+      if (!item) return;
+      showView(item.dataset.view);
+      setNavOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setNavOpen(false);
+    });
 
     function loadMembers() {
       try {
@@ -348,6 +781,171 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
     }
 
+    function loadList(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw == null) {
+          localStorage.setItem(key, JSON.stringify(fallback));
+          return fallback.map((item) => ({ ...item, permissionIds: item.permissionIds ? [...item.permissionIds] : undefined }));
+        }
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : fallback.map((item) => ({ ...item }));
+      } catch {
+        return fallback.map((item) => ({ ...item }));
+      }
+    }
+
+    function loadRoles() {
+      const list = loadList(ROLES_KEY, DEFAULT_ROLES);
+      if (list.length) return list;
+      localStorage.setItem(ROLES_KEY, JSON.stringify(DEFAULT_ROLES));
+      return DEFAULT_ROLES.map((item) => ({ ...item, permissionIds: [...item.permissionIds] }));
+    }
+
+    function loadPermissions() {
+      const list = loadList(PERMS_KEY, DEFAULT_PERMISSIONS);
+      if (list.length) return list;
+      localStorage.setItem(PERMS_KEY, JSON.stringify(DEFAULT_PERMISSIONS));
+      return DEFAULT_PERMISSIONS.map((item) => ({ ...item }));
+    }
+
+    function savePermissions() {
+      localStorage.setItem(PERMS_KEY, JSON.stringify(permissions));
+    }
+
+    function saveRoles() {
+      localStorage.setItem(ROLES_KEY, JSON.stringify(roles));
+    }
+
+    function getRole(id) {
+      return roles.find((role) => role.id === id);
+    }
+
+    function roleName(id) {
+      return getRole(id)?.name || id;
+    }
+
+    function migrateMemberRoles() {
+      let changed = false;
+      members.forEach((member) => {
+        if (getRole(member.role)) return;
+        const byName = roles.find((role) => role.name === member.role);
+        if (byName) {
+          member.role = byName.id;
+          changed = true;
+        }
+      });
+      if (changed) saveMembers();
+    }
+
+    function contrastText(hex) {
+      const value = String(hex || "#888888").replace("#", "");
+      if (value.length !== 6) return "#fffaf1";
+      const r = parseInt(value.slice(0, 2), 16);
+      const g = parseInt(value.slice(2, 4), 16);
+      const b = parseInt(value.slice(4, 6), 16);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return luminance > 0.62 ? "#13211c" : "#fffaf1";
+    }
+
+    function permissionLabels(roleId) {
+      const role = getRole(roleId);
+      if (!role) return [];
+      return role.permissionIds
+        .map((id) => permissions.find((perm) => perm.id === id)?.label)
+        .filter(Boolean);
+    }
+
+    function permissionChips(roleId) {
+      const labels = permissionLabels(roleId);
+      if (!labels.length) return `<span class="chip view">none</span>`;
+      return labels.map((label) => `<span class="chip">${escapeHtml(label)}</span>`).join("");
+    }
+
+    function roleOptions(selectedId) {
+      return roles.map((role) => `
+        <option value="${escapeHtml(role.id)}" ${role.id === selectedId ? "selected" : ""}>${escapeHtml(role.name)}</option>
+      `).join("");
+    }
+
+    function fillMemberRoleSelect() {
+      const current = form.role.value;
+      const preferred = roles.some((role) => role.id === current)
+        ? current
+        : (roles.find((role) => role.name === "Viewer")?.id || roles[0]?.id || "");
+      form.role.innerHTML = roleOptions(preferred);
+    }
+
+    function permissionCheckboxes(name, selectedIds) {
+      if (!permissions.length) {
+        return `<p class="role-note">Add a permission type first.</p>`;
+      }
+      return permissions.map((perm) => `
+        <label>
+          <input type="checkbox" name="${escapeHtml(name)}" value="${escapeHtml(perm.id)}" ${selectedIds.includes(perm.id) ? "checked" : ""} />
+          ${escapeHtml(perm.label)}
+        </label>
+      `).join("");
+    }
+
+    function selectedCheckboxes(root, name) {
+      return [...root.querySelectorAll(`input[name="${name}"]:checked`)].map((input) => input.value);
+    }
+
+    function loadActivity() {
+      try {
+        const raw = localStorage.getItem(ACTIVITY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed.slice(0, ACTIVITY_LIMIT) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveActivity() {
+      localStorage.setItem(ACTIVITY_KEY, JSON.stringify(activity));
+    }
+
+    function logActivity(message) {
+      activity.unshift({
+        id: crypto.randomUUID(),
+        at: Date.now(),
+        message
+      });
+      activity = activity.slice(0, ACTIVITY_LIMIT);
+      saveActivity();
+      renderActivity();
+    }
+
+    function formatTimestamp(ms) {
+      return new Date(ms).toLocaleString(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    }
+
+    function renderActivity() {
+      activityCount.textContent = activity.length === 1
+        ? "1 event"
+        : `${activity.length} events`;
+
+      if (!activity.length) {
+        activityBody.innerHTML = `<div class="empty">No activity yet. Add, update, or remove a team member to start the log.</div>`;
+        return;
+      }
+
+      activityBody.innerHTML = `
+        <ol class="activity-list">
+          ${activity.map((entry) => `
+            <li>
+              <time datetime="${escapeHtml(new Date(entry.at).toISOString())}">${escapeHtml(formatTimestamp(entry.at))}</time>
+              <p>${escapeHtml(entry.message)}</p>
+            </li>
+          `).join("")}
+        </ol>
+      `;
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replaceAll("&", "&amp;")
@@ -357,22 +955,81 @@
         .replaceAll("'", "&#39;");
     }
 
-    function permissionChips(role) {
-      return (ROLE_PERMISSIONS[role] || [])
-        .map((perm) => {
-          const cls = CHIP_CLASS[perm] || "view";
-          return `<span class="chip ${cls}">${escapeHtml(perm)}</span>`;
-        })
-        .join("");
+    function renderRolesView() {
+      fillRoleFormChecks();
+      renderPermTypes();
+
+      if (!roles.length) {
+        rolesList.innerHTML = `<div class="empty">No roles yet. Add one on the right.</div>`;
+        return;
+      }
+
+      rolesList.innerHTML = roles.map((role) => {
+        const text = contrastText(role.color);
+        return `
+          <article class="role-card" data-role-id="${escapeHtml(role.id)}">
+            <div class="role-card-top">
+              <span class="role-pill" style="background:${escapeHtml(role.color)};color:${text}">${escapeHtml(role.name)}</span>
+              <button class="btn btn-ghost" type="button" data-delete-role="${escapeHtml(role.id)}">Delete role</button>
+            </div>
+            <div class="role-meta">
+              <div>
+                <label>Name</label>
+                <input type="text" data-role-name="${escapeHtml(role.id)}" value="${escapeHtml(role.name)}" />
+              </div>
+              <div>
+                <label>Color</label>
+                <input type="color" data-role-color="${escapeHtml(role.id)}" value="${escapeHtml(role.color)}" />
+              </div>
+            </div>
+            <p class="role-note">Permissions</p>
+            <div class="checks">
+              ${permissionCheckboxes(`role-edit-${role.id}`, role.permissionIds)}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function fillRoleFormChecks() {
+      const selected = selectedCheckboxes(roleForm, "role-create-perm");
+      rolePermChecks.innerHTML = permissionCheckboxes("role-create-perm", selected);
+    }
+
+    function renderPermTypes() {
+      if (!permissions.length) {
+        permTypes.innerHTML = `<p class="role-note">None yet.</p>`;
+        return;
+      }
+      permTypes.innerHTML = permissions.map((perm) => `
+        <div class="perm-row">
+          <span>${escapeHtml(perm.label)}</span>
+          <button class="btn btn-ghost" type="button" data-delete-perm="${escapeHtml(perm.id)}">Remove</button>
+        </div>
+      `).join("");
     }
 
     function render() {
+      fillMemberRoleSelect();
+      renderBrowse();
       memberCount.textContent = members.length === 1
         ? "1 person"
         : `${members.length} people`;
 
+      const query = userSearch.value.trim().toLowerCase();
+      const visible = members.filter((member) => {
+        if (!query) return true;
+        return member.name.toLowerCase().includes(query)
+          || member.email.toLowerCase().includes(query);
+      });
+
       if (!members.length) {
         tableBody.innerHTML = `<div class="empty">No one on the team yet. Add the first member on the left.</div>`;
+        return;
+      }
+
+      if (!visible.length) {
+        tableBody.innerHTML = `<div class="empty">No matching users</div>`;
         return;
       }
 
@@ -388,26 +1045,67 @@
             </tr>
           </thead>
           <tbody>
-            ${members.map((member) => `
+            ${visible.map((member) => {
+              const role = getRole(member.role);
+              const color = role?.color || "#888888";
+              return `
               <tr data-id="${escapeHtml(member.id)}">
                 <td data-label="Name"><span class="name">${escapeHtml(member.name)}</span></td>
                 <td data-label="Email"><span class="email">${escapeHtml(member.email)}</span></td>
                 <td data-label="Role">
-                  <select class="role-select" data-id="${escapeHtml(member.id)}" aria-label="Change role for ${escapeHtml(member.name)}">
-                    ${["Admin", "Editor", "Viewer"].map((role) => `
-                      <option value="${role}" ${role === member.role ? "selected" : ""}>${role}</option>
-                    `).join("")}
-                  </select>
+                  <div class="role-cell">
+                    <span class="role-badge" title="${escapeHtml(roleName(member.role))}" style="background:${escapeHtml(color)}"></span>
+                    <select class="role-select" data-id="${escapeHtml(member.id)}" aria-label="Change role for ${escapeHtml(member.name)}">
+                      ${roleOptions(member.role)}
+                    </select>
+                  </div>
                 </td>
                 <td data-label="Permissions"><div class="perms">${permissionChips(member.role)}</div></td>
                 <td data-label="Actions">
                   <button class="btn btn-ghost" type="button" data-remove="${escapeHtml(member.id)}">Remove</button>
                 </td>
               </tr>
-            `).join("")}
+            `;
+            }).join("")}
           </tbody>
         </table>
       `;
+    }
+
+    function renderBrowse() {
+      if (!roles.length) {
+        browseBody.innerHTML = `<div class="empty">No roles yet. Add one in Manage Roles.</div>`;
+        return;
+      }
+
+      const grouped = roles.map((role) => {
+        const people = members.filter((member) => member.role === role.id);
+        const text = contrastText(role.color);
+        const list = people.length
+          ? `<ul class="browse-people">${people.map((member) => `
+              <li><span class="name">${escapeHtml(member.name)}</span> <span class="email">(${escapeHtml(member.email)})</span></li>
+            `).join("")}</ul>`
+          : `<p class="browse-empty">No users</p>`;
+
+        return `
+          <section class="browse-group">
+            <span class="role-pill" style="background:${escapeHtml(role.color)};color:${text}">${escapeHtml(role.name)}</span>
+            ${list}
+          </section>
+        `;
+      }).join("");
+
+      const unknown = members.filter((member) => !getRole(member.role));
+      const leftover = unknown.length
+        ? `<section class="browse-group">
+            <span class="role-pill" style="background:#888888;color:#fffaf1">Unassigned</span>
+            <ul class="browse-people">${unknown.map((member) => `
+              <li><span class="name">${escapeHtml(member.name)}</span> <span class="email">(${escapeHtml(member.email)})</span></li>
+            `).join("")}</ul>
+          </section>`
+        : "";
+
+      browseBody.innerHTML = grouped + leftover;
     }
 
     form.addEventListener("submit", (event) => {
@@ -417,6 +1115,11 @@
       const name = form.name.value.trim();
       const email = form.email.value.trim();
       const role = form.role.value;
+
+      if (!roles.length) {
+        formError.textContent = "Create a role in Manage Roles before adding people.";
+        return;
+      }
 
       if (!name || !email) {
         formError.textContent = "Name and email are required.";
@@ -442,9 +1145,12 @@
       });
 
       saveMembers();
+      logActivity(`${name} was added as ${roleName(role)}`);
       render();
+      const keepRole = form.role.value;
       form.reset();
-      form.role.value = "Viewer";
+      fillMemberRoleSelect();
+      form.role.value = keepRole;
       form.name.focus();
     });
 
@@ -455,24 +1161,170 @@
       const member = members.find((m) => m.id === select.dataset.id);
       if (!member) return;
 
-      member.role = select.value;
+      const fromRole = member.role;
+      const toRole = select.value;
+      if (fromRole === toRole) return;
+
+      member.role = toRole;
       saveMembers();
+      logActivity(`${member.name}'s role changed from ${roleName(fromRole)} to ${roleName(toRole)}`);
 
       const row = select.closest("tr");
       const perms = row.querySelector(".perms");
       if (perms) perms.innerHTML = permissionChips(member.role);
+      const badge = row.querySelector(".role-badge");
+      if (badge) {
+        const role = getRole(member.role);
+        badge.style.background = role?.color || "#888888";
+        badge.title = roleName(member.role);
+      }
+      renderBrowse();
     });
+
+    userSearch.addEventListener("input", () => render());
+    userSearch.addEventListener("search", () => render());
 
     tableBody.addEventListener("click", (event) => {
       const button = event.target.closest("[data-remove]");
       if (!button) return;
 
+      const member = members.find((m) => m.id === button.dataset.remove);
       members = members.filter((m) => m.id !== button.dataset.remove);
       saveMembers();
+      if (member) logActivity(`${member.name} was removed`);
       render();
     });
 
+    roleForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      roleFormError.textContent = "";
+      const name = roleForm.name.value.trim();
+      const color = roleForm.color.value;
+      const permissionIds = selectedCheckboxes(roleForm, "role-create-perm");
+
+      if (!name) {
+        roleFormError.textContent = "Role name is required.";
+        return;
+      }
+
+      if (roles.some((role) => role.name.toLowerCase() === name.toLowerCase())) {
+        roleFormError.textContent = "A role with that name already exists.";
+        return;
+      }
+
+      roles.push({
+        id: crypto.randomUUID(),
+        name,
+        color,
+        permissionIds
+      });
+      saveRoles();
+      roleForm.reset();
+      roleForm.color.value = "#1f6f5b";
+      renderRolesView();
+      render();
+    });
+
+    permForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      permFormError.textContent = "";
+      const label = permForm.label.value.trim();
+
+      if (!label) {
+        permFormError.textContent = "Enter a permission label.";
+        return;
+      }
+
+      if (permissions.some((perm) => perm.label.toLowerCase() === label.toLowerCase())) {
+        permFormError.textContent = "That permission already exists.";
+        return;
+      }
+
+      permissions.push({ id: crypto.randomUUID(), label });
+      savePermissions();
+      permForm.reset();
+      renderRolesView();
+    });
+
+    document.getElementById("view-roles").addEventListener("click", (event) => {
+      const deleteRole = event.target.closest("[data-delete-role]");
+      if (deleteRole) {
+        const roleId = deleteRole.dataset.deleteRole;
+        const role = getRole(roleId);
+        const heldBy = members.filter((member) => member.role === roleId);
+        if (heldBy.length) {
+          const names = heldBy.map((member) => member.name).join(", ");
+          roleListError.textContent = `Can't delete ${role?.name || "this role"} — ${heldBy.length === 1 ? "1 person still has it" : `${heldBy.length} people still have it`}: ${names}.`;
+          return;
+        }
+        roleListError.textContent = "";
+        roles = roles.filter((item) => item.id !== roleId);
+        saveRoles();
+        renderRolesView();
+        render();
+        return;
+      }
+
+      const deletePerm = event.target.closest("[data-delete-perm]");
+      if (deletePerm) {
+        const permId = deletePerm.dataset.deletePerm;
+        permissions = permissions.filter((perm) => perm.id !== permId);
+        roles.forEach((role) => {
+          role.permissionIds = role.permissionIds.filter((id) => id !== permId);
+        });
+        savePermissions();
+        saveRoles();
+        renderRolesView();
+        render();
+      }
+    });
+
+    document.getElementById("view-roles").addEventListener("change", (event) => {
+      const colorInput = event.target.closest("[data-role-color]");
+      const nameInput = event.target.closest("[data-role-name]");
+      const checkbox = event.target.closest(".role-card input[type='checkbox']");
+
+      if (colorInput) {
+        const role = getRole(colorInput.dataset.roleColor);
+        if (!role) return;
+        role.color = colorInput.value;
+        saveRoles();
+        renderRolesView();
+        render();
+        return;
+      }
+
+      if (nameInput) {
+        const role = getRole(nameInput.dataset.roleName);
+        const name = nameInput.value.trim();
+        if (!role || !name) return;
+        if (roles.some((item) => item.id !== role.id && item.name.toLowerCase() === name.toLowerCase())) {
+          roleListError.textContent = "A role with that name already exists.";
+          nameInput.value = role.name;
+          return;
+        }
+        roleListError.textContent = "";
+        role.name = name;
+        saveRoles();
+        renderRolesView();
+        render();
+        return;
+      }
+
+      if (checkbox) {
+        const card = checkbox.closest(".role-card");
+        const role = getRole(card.dataset.roleId);
+        if (!role) return;
+        role.permissionIds = [...card.querySelectorAll("input[type='checkbox']:checked")].map((input) => input.value);
+        saveRoles();
+        render();
+      }
+    });
+
+    showView(currentView);
     render();
+    renderActivity();
+    renderRolesView();
   </script>
 </body>
 </html>
