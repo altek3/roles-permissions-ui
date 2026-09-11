@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Access Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #13211c;
+      --ink-soft: #24352e;
+      --paper: #f4efe4;
+      --paper-2: #ebe4d4;
+      --card: #fffaf1;
+      --line: #d8cfc0;
+      --muted: #6b6458;
+      --teal: #1f6f5b;
+      --teal-deep: #155246;
+      --amber: #d9772a;
+      --rose: #b13a3a;
+      --shadow: 0 18px 40px rgba(19, 33, 28, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Outfit, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 90% -10%, #e7c48a 0%, transparent 55%),
+        radial-gradient(900px 420px at -10% 110%, #9ecab8 0%, transparent 50%),
+        var(--paper);
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: var(--teal);
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.05;
+      margin: 0;
+      font-weight: 650;
+    }
+
+    .lede {
+      max-width: 34ch;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-card { padding: 24px; }
+
+    .form-card h2,
+    .table-head h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      margin: 0 0 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+
+    .field { margin-bottom: 14px; }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(31, 111, 91, 0.18);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      width: 100%;
+      margin-top: 6px;
+      background: var(--teal);
+      color: #f7fff9;
+    }
+
+    .btn-primary:hover { background: var(--teal-deep); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--rose);
+      padding: 8px 10px;
+    }
+
+    .btn-ghost:hover { background: #f8e8e6; }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin: 14px 0 0;
+    }
+
+    .error {
+      color: var(--rose);
+      font-size: 0.82rem;
+      min-height: 1.2em;
+      margin: 0 0 8px;
+    }
+
+    .table-card { overflow: hidden; min-height: 280px; }
+
+    .table-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 22px 22px 0;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--paper-2);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .name {
+      font-weight: 600;
+    }
+
+    .email {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .role-select {
+      min-width: 120px;
+      padding: 8px 10px;
+    }
+
+    .perms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e7f3ee;
+      color: var(--teal-deep);
+    }
+
+    .chip.view { background: #efe8d8; color: #6a4b16; }
+    .chip.edit { background: #f3e3d2; color: #8a4a12; }
+    .chip.manage { background: #dceee7; color: var(--teal-deep); }
+
+    .empty {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .layout { grid-template-columns: 1fr; }
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tbody tr {
+        padding: 14px 16px 6px;
+        border-bottom: 1px solid var(--line);
+      }
+      td {
+        padding: 6px 0;
+        border: 0;
+      }
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <p class="eyebrow">Workspace control</p>
+        <h1>Team Access Manager</h1>
+      </div>
+      <p class="lede">Add people, assign roles, and see exactly what they can do — stored on this device.</p>
+    </header>
+
+    <div class="layout">
+      <section class="card form-card">
+        <h2>Add a member</h2>
+        <form id="member-form" novalidate>
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+              <option value="Admin">Admin</option>
+              <option value="Editor">Editor</option>
+              <option value="Viewer" selected>Viewer</option>
+            </select>
+          </div>
+          <p class="error" id="form-error" aria-live="polite"></p>
+          <button class="btn btn-primary" type="submit">Add to team</button>
+        </form>
+        <p class="hint">Admin can manage users, edit, and view. Editor can edit and view. Viewer can view only.</p>
+      </section>
+
+      <section class="card table-card">
+        <div class="table-head">
+          <h2>Team members</h2>
+          <span class="count" id="member-count"></span>
+        </div>
+        <div id="table-body"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "team-access-manager.members";
+
+    const ROLE_PERMISSIONS = {
+      Admin: ["manage users", "edit content", "view"],
+      Editor: ["edit content", "view"],
+      Viewer: ["view"]
+    };
+
+    const CHIP_CLASS = {
+      "manage users": "manage",
+      "edit content": "edit",
+      view: "view"
+    };
+
+    const form = document.getElementById("member-form");
+    const formError = document.getElementById("form-error");
+    const tableBody = document.getElementById("table-body");
+    const memberCount = document.getElementById("member-count");
+
+    let members = loadMembers();
+
+    function loadMembers() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveMembers() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function permissionChips(role) {
+      return (ROLE_PERMISSIONS[role] || [])
+        .map((perm) => {
+          const cls = CHIP_CLASS[perm] || "view";
+          return `<span class="chip ${cls}">${escapeHtml(perm)}</span>`;
+        })
+        .join("");
+    }
+
+    function render() {
+      memberCount.textContent = members.length === 1
+        ? "1 person"
+        : `${members.length} people`;
+
+      if (!members.length) {
+        tableBody.innerHTML = `<div class="empty">No one on the team yet. Add the first member on the left.</div>`;
+        return;
+      }
+
+      tableBody.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Permissions</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.map((member) => `
+              <tr data-id="${escapeHtml(member.id)}">
+                <td data-label="Name"><span class="name">${escapeHtml(member.name)}</span></td>
+                <td data-label="Email"><span class="email">${escapeHtml(member.email)}</span></td>
+                <td data-label="Role">
+                  <select class="role-select" data-id="${escapeHtml(member.id)}" aria-label="Change role for ${escapeHtml(member.name)}">
+                    ${["Admin", "Editor", "Viewer"].map((role) => `
+                      <option value="${role}" ${role === member.role ? "selected" : ""}>${role}</option>
+                    `).join("")}
+                  </select>
+                </td>
+                <td data-label="Permissions"><div class="perms">${permissionChips(member.role)}</div></td>
+                <td data-label="Actions">
+                  <button class="btn btn-ghost" type="button" data-remove="${escapeHtml(member.id)}">Remove</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      formError.textContent = "";
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const role = form.role.value;
+
+      if (!name || !email) {
+        formError.textContent = "Name and email are required.";
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        formError.textContent = "Enter a valid email address.";
+        return;
+      }
+
+      const exists = members.some((m) => m.email.toLowerCase() === email.toLowerCase());
+      if (exists) {
+        formError.textContent = "That email is already on the team.";
+        return;
+      }
+
+      members.push({
+        id: crypto.randomUUID(),
+        name,
+        email,
+        role
+      });
+
+      saveMembers();
+      render();
+      form.reset();
+      form.role.value = "Viewer";
+      form.name.focus();
+    });
+
+    tableBody.addEventListener("change", (event) => {
+      const select = event.target.closest(".role-select");
+      if (!select) return;
+
+      const member = members.find((m) => m.id === select.dataset.id);
+      if (!member) return;
+
+      member.role = select.value;
+      saveMembers();
+
+      const row = select.closest("tr");
+      const perms = row.querySelector(".perms");
+      if (perms) perms.innerHTML = permissionChips(member.role);
+    });
+
+    tableBody.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove]");
+      if (!button) return;
+
+      members = members.filter((m) => m.id !== button.dataset.remove);
+      saveMembers();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
